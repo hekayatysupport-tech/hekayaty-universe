@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "Hekayaty World"
+version = "1.0.0"
+id = "artifacts/hekayaty-world"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23259
+
+[services.development]
+run = "pnpm --filter @workspace/hekayaty-world run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/hekayaty-world", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/hekayaty-world/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23259"
+BASE_PATH = "/"

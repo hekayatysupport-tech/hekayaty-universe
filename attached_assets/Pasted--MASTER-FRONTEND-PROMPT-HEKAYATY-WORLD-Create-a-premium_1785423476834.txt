@@ -1,0 +1,888 @@
+# MASTER FRONTEND PROMPT — HEKAYATY WORLD
+
+Create a premium AAA-quality frontend-only web application called **Hekayaty World**.
+
+This is not a comic store.
+
+This is the official digital hub of a massive Arabic superhero and fantasy universe inspired by the ecosystem approach of Marvel, DC, Star Wars, and League of Legends Universe, but with a completely original identity and design.
+
+The website must be designed as if it already serves millions of users and represents a world-class entertainment franchise.
+
+---
+
+# Core Vision
+
+Hekayaty World is the central destination for:
+
+* Comics
+* Characters
+* Worlds
+* Lore
+* Timeline
+* News
+* Community
+* Card Game
+* Collections
+* Reading Guides
+* Universe Encyclopedia
+
+The website should feel cinematic, immersive, premium, modern, futuristic, and highly interactive.
+
+Users should feel they are entering a living universe.
+
+---
+
+# Technical Requirements
+
+Frontend Only.
+
+Do NOT connect any backend.
+
+Do NOT connect any database.
+
+Use realistic mock data.
+
+Use local JSON data and TypeScript interfaces.
+
+Tech Stack:
+
+* React
+* TypeScript
+* Vite
+* Tailwind CSS
+* Framer Motion
+* React Router
+* Shadcn UI
+* Lucide Icons
+* React Query (mock mode)
+* Zustand
+* Responsive Design
+* Mobile First
+* RTL + LTR Ready
+* SEO Friendly Structure
+
+---
+
+# Global Layout
+
+Create:
+
+## Top Navigation
+
+Logo
+
+Navigation Links:
+
+* Home
+* Comics
+* Characters
+* Worlds
+* Timeline
+* Encyclopedia
+* Card Game
+* Community
+* News
+* Collections
+
+Right Side:
+
+* Search
+* Notifications
+* User Avatar
+* Language Switcher
+* Theme Toggle
+
+Sticky Navbar
+
+Glassmorphism Effect
+
+---
+
+# Mega Search System
+
+Global Search Overlay
+
+Search:
+
+* Characters
+* Worlds
+* Comics
+* Events
+* Organizations
+* Locations
+* Powers
+* Weapons
+
+Live Search Experience
+
+Keyboard Navigation
+
+Recent Searches
+
+Popular Searches
+
+Trending Searches
+
+---
+
+# Homepage
+
+Create an extremely cinematic homepage.
+
+---
+
+## Hero Section
+
+Full Screen
+
+Animated Background
+
+Video Background Placeholder
+
+Universe Logo
+
+Headline
+
+Subtitle
+
+CTA Buttons
+
+* Explore Universe
+* Read Comics
+
+Animated Particles
+
+Parallax Effects
+
+---
+
+## Featured Characters
+
+Character Cards
+
+Hover Animations
+
+Power Level Indicators
+
+Quick View
+
+---
+
+## Latest Comics
+
+Comic Carousel
+
+Issue Cards
+
+Release Information
+
+Reading Buttons
+
+---
+
+## Worlds Section
+
+Large Interactive World Cards
+
+Map Preview
+
+World Stats
+
+World Lore Preview
+
+---
+
+## Timeline Highlights
+
+Major Historical Events
+
+Interactive Horizontal Timeline
+
+---
+
+## News Section
+
+Latest Universe News
+
+Announcements
+
+Events
+
+Trailers
+
+Updates
+
+---
+
+## Community Spotlight
+
+Featured Fan Art
+
+Popular Discussions
+
+Top Contributors
+
+---
+
+## Statistics Section
+
+Characters Count
+
+Worlds Count
+
+Comics Count
+
+Events Count
+
+Community Members
+
+---
+
+# Comics Module
+
+Complete Comics Library
+
+Filters:
+
+* Series
+* World
+* Hero
+* Writer
+* Artist
+* Year
+* Genre
+
+Views:
+
+* Grid
+* List
+
+Sorting:
+
+* Latest
+* Most Popular
+* Highest Rated
+
+---
+
+## Comic Details Page
+
+Cover
+
+Synopsis
+
+Writers
+
+Artists
+
+Universe
+
+World
+
+Characters
+
+Related Stories
+
+Reading Order
+
+Issue Information
+
+Purchase Placeholder
+
+Read Placeholder
+
+Recommendations
+
+---
+
+## Reader Interface
+
+Frontend Mock Reader
+
+Page Navigation
+
+Zoom
+
+Fullscreen
+
+Bookmarks
+
+Progress Tracking
+
+Reading Settings
+
+---
+
+# Characters Module
+
+Create an official character database.
+
+---
+
+## Characters Listing
+
+Filters:
+
+* Hero
+* Villain
+* Anti Hero
+* Neutral
+
+Power Categories
+
+World
+
+Organization
+
+Status
+
+---
+
+## Character Profile
+
+Large Hero Banner
+
+Portrait
+
+Biography
+
+Origin Story
+
+Abilities
+
+Weaknesses
+
+Affiliations
+
+Enemies
+
+Allies
+
+Power Statistics
+
+Comic Appearances
+
+Related Events
+
+Timeline Appearances
+
+Gallery
+
+Quotes
+
+Trivia
+
+---
+
+## Character Relationship Network
+
+Interactive Graph
+
+Character Connections
+
+Clickable Nodes
+
+---
+
+# Worlds Module
+
+Universe Atlas
+
+---
+
+## Worlds Listing
+
+Cards
+
+Maps
+
+Preview Information
+
+---
+
+## World Details
+
+Banner
+
+Description
+
+Map
+
+Cities
+
+Regions
+
+Organizations
+
+Important Characters
+
+Major Events
+
+Artifacts
+
+Creatures
+
+History
+
+Gallery
+
+Timeline
+
+Related Comics
+
+---
+
+## Interactive World Map
+
+Zoom
+
+Regions
+
+Markers
+
+Tooltips
+
+Animations
+
+---
+
+# Timeline Module
+
+One of the biggest sections.
+
+---
+
+## Timeline Page
+
+Historical Timeline
+
+Horizontal Scroll
+
+Filters
+
+Search
+
+Event Categories
+
+---
+
+## Event Details
+
+Description
+
+Consequences
+
+Participants
+
+Related Comics
+
+Related Characters
+
+Related Worlds
+
+Media Gallery
+
+---
+
+# Encyclopedia Module
+
+Official Lore Encyclopedia
+
+---
+
+Categories:
+
+* Characters
+* Places
+* Organizations
+* Powers
+* Artifacts
+* Creatures
+* Technologies
+* Religions
+* Historical Events
+
+---
+
+## Encyclopedia Entry Page
+
+Title
+
+Category
+
+Description
+
+Connections
+
+Related Articles
+
+Tags
+
+References
+
+---
+
+# News Portal
+
+Professional Entertainment News System
+
+---
+
+## News Listing
+
+Featured Articles
+
+Latest Articles
+
+Categories
+
+Trending Topics
+
+---
+
+## News Article Page
+
+Hero Image
+
+Article Content
+
+Related Articles
+
+Share Buttons
+
+Comments UI
+
+---
+
+# Community Module
+
+Large Community Platform
+
+Frontend Only
+
+---
+
+## Community Homepage
+
+Trending Posts
+
+Latest Discussions
+
+Featured Topics
+
+Popular Creators
+
+---
+
+## Discussion Page
+
+Threads
+
+Comments
+
+Replies
+
+Reactions
+
+Bookmarks
+
+Mock Interactions
+
+---
+
+## Fan Art Gallery
+
+Grid Gallery
+
+Artwork Details
+
+Creator Profile
+
+Likes
+
+Comments
+
+---
+
+# Card Game Module
+
+Dedicated TCG Section
+
+---
+
+## Card Database
+
+Card Search
+
+Filters
+
+Rarity
+
+Faction
+
+World
+
+Type
+
+Power
+
+---
+
+## Card Details
+
+Large Card Preview
+
+Abilities
+
+Lore
+
+Statistics
+
+Related Characters
+
+Related Decks
+
+---
+
+## Deck Builder
+
+Frontend Mock
+
+Drag and Drop
+
+Deck Statistics
+
+Collection Progress
+
+---
+
+# Collections Module
+
+User Collection Center
+
+---
+
+## Collection Dashboard
+
+Owned Comics
+
+Owned Cards
+
+Achievements
+
+Badges
+
+Favorites
+
+Reading History
+
+Wishlist
+
+---
+
+# User Profiles
+
+Public Profiles
+
+Avatar
+
+Bio
+
+Favorite Characters
+
+Favorite Worlds
+
+Achievements
+
+Activity Feed
+
+Collections
+
+---
+
+# Reading Guides
+
+Important Feature
+
+---
+
+## Reading Order System
+
+Beginner Paths
+
+Character Paths
+
+World Paths
+
+Event Paths
+
+Recommended Reading
+
+Progress Tracker
+
+---
+
+# Organizations Module
+
+Create pages for:
+
+Guilds
+
+Kingdoms
+
+Empires
+
+Secret Societies
+
+Corporations
+
+Military Groups
+
+---
+
+# Powers Database
+
+Power Encyclopedia
+
+Power Types
+
+Origins
+
+Users
+
+Related Events
+
+---
+
+# Artifacts Database
+
+Legendary Weapons
+
+Ancient Relics
+
+Mystic Objects
+
+Detailed Pages
+
+---
+
+# Creatures Database
+
+Monsters
+
+Species
+
+Beasts
+
+Civilizations
+
+---
+
+# Achievements System
+
+Frontend Only
+
+Badges
+
+Milestones
+
+Unlock Animations
+
+Progress Indicators
+
+---
+
+# Notifications Center
+
+Universe Updates
+
+News Alerts
+
+Comic Releases
+
+Community Notifications
+
+---
+
+# Design Language
+
+Visual Quality:
+
+AAA Entertainment Platform
+
+Inspired By:
+
+* Marvel Unlimited
+* DC Universe Infinite
+* Riot Universe
+* Arcane Website
+* League of Legends Universe
+* Star Wars Databank
+* Fandom
+
+But completely original.
+
+---
+
+# Animations
+
+Use Framer Motion everywhere.
+
+Include:
+
+* Page Transitions
+* Hover Effects
+* Card Animations
+* Scroll Reveals
+* Animated Counters
+* Interactive Maps
+* Floating Elements
+
+---
+
+# Dark Mode
+
+Primary Theme:
+
+Dark Cinematic Theme
+
+Colors:
+
+* Deep Black
+* Charcoal
+* Gold
+* Bronze
+* Silver Highlights
+
+Inspired by a legendary fantasy universe.
+
+---
+
+# Mobile Experience
+
+Must be fully responsive.
+
+Mobile navigation.
+
+Touch-friendly interactions.
+
+Optimized reading experience.
+
+---
+
+# Deliverables
+
+Generate:
+
+* Complete Frontend Structure
+* Routing System
+* Components Architecture
+* Layout System
+* Mock Data Layer
+* TypeScript Types
+* Responsive UI
+* Reusable Design System
+* Professional Folder Structure
+* Production-Level Frontend Ready For Backend Integration Later
+
+The final result should feel like the official digital universe hub of the largest Arabic superhero franchise ever created, with the scale, polish, and immersion of a global entertainment brand.
