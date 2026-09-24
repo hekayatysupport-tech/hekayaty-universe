@@ -1,27 +1,49 @@
 <svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
   <!-- Background -->
   <rect width="180" height="180" rx="36" fill="#0D0D1A"/>
-  <!-- Gold ring accent -->
-  <circle cx="90" cy="90" r="72" stroke="url(#goldRing)" stroke-width="4" fill="none" opacity="0.6"/>
-  <!-- Arabic letter ح (Haa) for Hekayaty -->
-  <text
-    x="90"
-    y="115"
-    font-family="'Amiri', 'Noto Naskh Arabic', 'Arabic Typesetting', serif"
-    font-size="90"
-    font-weight="700"
-    text-anchor="middle"
-    fill="url(#goldGrad)"
-  >ح</text>
+
+  <!-- Feather body / spine -->
+  <path
+    d="M90 148 Q58 110 52 68 Q50 42 90 30 Q130 42 128 68 Q122 110 90 148Z"
+    fill="url(#featherBody)"
+    opacity="0.95"
+  />
+
+  <!-- Feather barbs left -->
+  <path d="M90 148 Q70 120 56 100" stroke="url(#quillGrad)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+  <path d="M90 138 Q68 112 54 90"  stroke="url(#quillGrad)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+  <path d="M90 126 Q70 102 56 82"  stroke="url(#quillGrad)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+  <path d="M90 114 Q72 93 60 72"   stroke="url(#quillGrad)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+  <path d="M90 102 Q74 84 66 62"   stroke="url(#quillGrad)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+  <path d="M90 88  Q76 72 74 52"   stroke="url(#quillGrad)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+
+  <!-- Feather barbs right -->
+  <path d="M90 148 Q110 120 124 100" stroke="url(#quillGrad)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+  <path d="M90 138 Q112 112 126 90"  stroke="url(#quillGrad)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+  <path d="M90 126 Q110 102 124 82"  stroke="url(#quillGrad)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+  <path d="M90 114 Q108 93 120 72"   stroke="url(#quillGrad)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+  <path d="M90 102 Q106 84 114 62"   stroke="url(#quillGrad)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+  <path d="M90 88  Q104 72 106 52"   stroke="url(#quillGrad)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+
+  <!-- Central spine / rachis -->
+  <line x1="90" y1="30" x2="90" y2="155" stroke="url(#spineGrad)" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Quill tip -->
+  <path d="M88 148 Q90 162 92 148" stroke="url(#spineGrad)" stroke-width="2" stroke-linecap="round" fill="none"/>
+
   <defs>
-    <linearGradient id="goldGrad" x1="50" y1="40" x2="130" y2="140" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#FFD700"/>
-      <stop offset="50%" stop-color="#F5A623"/>
-      <stop offset="100%" stop-color="#C8720A"/>
+    <linearGradient id="featherBody" x1="52" y1="30" x2="128" y2="148" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#FFE066"/>
+      <stop offset="50%"  stop-color="#F5A623"/>
+      <stop offset="100%" stop-color="#C87010" stop-opacity="0.7"/>
     </linearGradient>
-    <linearGradient id="goldRing" x1="0" y1="0" x2="180" y2="180" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#FFD700"/>
-      <stop offset="100%" stop-color="#C8720A"/>
+    <linearGradient id="spineGrad" x1="90" y1="30" x2="90" y2="162" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#FFD700"/>
+      <stop offset="100%" stop-color="#8B4A00"/>
+    </linearGradient>
+    <linearGradient id="quillGrad" x1="52" y1="50" x2="128" y2="148" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#FFE066"/>
+      <stop offset="100%" stop-color="#C87010"/>
     </linearGradient>
   </defs>
 </svg>
