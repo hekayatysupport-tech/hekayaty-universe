@@ -7,26 +7,38 @@ const router = Router();
  * GET /api/worlds
  */
 router.get("/worlds", async (_req, res) => {
-  const { data, error } = await supabase
-    .from("worlds")
-    .select(`id, name, arabic_name, description, media:cover_media_id ( secure_url, alt_text )`)
-    .order("name");
+  try {
+    let { data, error } = await supabase
+      .from("worlds")
+      .select(`id, name, arabic_name, description, media:cover_media_id ( secure_url, alt_text )`)
+      .order("name");
 
-  if (error) {
-    console.error("Error fetching worlds:", error.message);
-    return res.status(500).json({ error: "Internal server error" });
+    if (error) {
+      console.warn("Worlds fetch with media relation failed, using direct select fallback:", error.message);
+      const fallback = await supabase.from("worlds").select("*").order("name");
+      data = fallback.data;
+      error = fallback.error;
+    }
+
+    if (error) {
+      console.error("Error fetching worlds:", error.message);
+      return res.status(500).json({ error: error.message });
+    }
+
+    const result = (data ?? []).map((w: any) => ({
+      id: w.id,
+      worldName: w.name,
+      worldArabicName: w.arabic_name,
+      description: w.description,
+      coverUrl: w.media?.secure_url ?? w.cover_url ?? null,
+      coverAlt: w.media?.alt_text ?? w.name ?? null,
+    }));
+
+    res.json(result);
+  } catch (err: any) {
+    console.error("GET /api/worlds crash:", err);
+    res.status(500).json({ error: err.message || "Internal server error" });
   }
-
-  const result = (data ?? []).map((w: any) => ({
-    id: w.id,
-    worldName: w.name,
-    worldArabicName: w.arabic_name,
-    description: w.description,
-    coverUrl: w.media?.secure_url ?? null,
-    coverAlt: w.media?.alt_text ?? null,
-  }));
-
-  res.json(result);
 });
 
 /**

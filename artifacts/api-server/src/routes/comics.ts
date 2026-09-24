@@ -37,40 +37,54 @@ async function checkIsAuthorizedAdmin(authHeader: string | undefined): Promise<b
  * GET /api/comics
  */
 router.get("/comics", async (req, res) => {
-  const isPreview = req.query.preview === "true";
-  let query = supabase
-    .from("comic_series")
-    .select(`id, title, arabic_title, description, status, publishing_status, media:cover_media_id ( secure_url, alt_text )`)
-    .order("title");
+  try {
+    const isPreview = req.query.preview === "true";
+    let query = supabase
+      .from("comic_series")
+      .select(`id, title, arabic_title, description, status, publishing_status, media:cover_media_id ( secure_url, alt_text )`)
+      .order("title");
 
-  if (!isPreview) {
-    query = query.eq("publishing_status", "published");
-  } else {
-    const isAuthorized = await checkIsAuthorizedAdmin(req.headers.authorization);
-    if (!isAuthorized) {
+    if (!isPreview) {
       query = query.eq("publishing_status", "published");
+    } else {
+      const isAuthorized = await checkIsAuthorizedAdmin(req.headers.authorization);
+      if (!isAuthorized) {
+        query = query.eq("publishing_status", "published");
+      }
     }
+
+    let { data, error } = await query;
+
+    if (error) {
+      console.warn("Comics fetch with media relation failed, using direct select fallback:", error.message);
+      let fallbackQuery = supabase.from("comic_series").select("*").order("title");
+      if (!isPreview) fallbackQuery = fallbackQuery.eq("publishing_status", "published");
+      const fallback = await fallbackQuery;
+      data = fallback.data;
+      error = fallback.error;
+    }
+
+    if (error) {
+      console.error("Error fetching comics:", error.message);
+      return res.status(500).json({ error: error.message });
+    }
+
+    const result = (data ?? []).map((s: any) => ({
+      id: s.id,
+      title: s.title,
+      arabicTitle: s.arabic_title,
+      description: s.description,
+      status: s.status,
+      publishingStatus: s.publishing_status || "draft",
+      coverUrl: s.media?.secure_url ?? s.cover_url ?? null,
+      coverAlt: s.media?.alt_text ?? s.title ?? null,
+    }));
+
+    res.json(result);
+  } catch (err: any) {
+    console.error("GET /api/comics crash:", err);
+    res.status(500).json({ error: err.message || "Internal server error" });
   }
-
-  const { data, error } = await query;
-
-  if (error) {
-    console.error("Error fetching comics:", error.message);
-    return res.status(500).json({ error: "Internal server error" });
-  }
-
-  const result = (data ?? []).map((s: any) => ({
-    id: s.id,
-    title: s.title,
-    arabicTitle: s.arabic_title,
-    description: s.description,
-    status: s.status,
-    publishingStatus: s.publishing_status || "draft",
-    coverUrl: s.media?.secure_url ?? null,
-    coverAlt: s.media?.alt_text ?? null,
-  }));
-
-  res.json(result);
 });
 
 /**

@@ -8,56 +8,67 @@ const router = Router();
  * Returns all characters with portrait URL and stats.
  */
 router.get("/characters", async (_req, res) => {
-  const [{ data, error }, { data: statsData }] = await Promise.all([
-    supabase
+  try {
+    let { data, error } = await supabase
       .from("characters")
       .select(`
         id, name, arabic_name, alias, title, quote, alignment, status,
         power_category, organization, short_bio,
         media:portrait_media_id ( secure_url, alt_text )
       `)
-      .order("name"),
-    supabase.from("character_stats").select("*"),
-  ]);
+      .order("name");
 
-  if (error) {
-    console.error("Error fetching characters:", error.message);
-    return res.status(500).json({ error: "Internal server error" });
+    if (error) {
+      console.warn("Character fetch with media relation failed, using direct select fallback:", error.message);
+      const fallback = await supabase.from("characters").select("*").order("name");
+      data = fallback.data;
+      error = fallback.error;
+    }
+
+    if (error) {
+      console.error("Error fetching characters:", error.message);
+      return res.status(500).json({ error: error.message });
+    }
+
+    const { data: statsData } = await supabase.from("character_stats").select("*");
+
+    const statsMap: Record<string, any> = {};
+    (statsData || []).forEach((s: any) => {
+      statsMap[s.character_id] = s;
+    });
+
+    const result = (data ?? []).map((c: any) => {
+      const s = statsMap[c.id];
+      return {
+        id: c.id,
+        name: c.name,
+        arabicName: c.arabic_name,
+        alias: c.alias,
+        title: c.title,
+        quote: c.quote,
+        alignment: c.alignment,
+        status: c.status,
+        powerCategory: c.power_category,
+        organization: c.organization,
+        shortBio: c.short_bio,
+        portraitUrl: c.media?.secure_url ?? c.portrait_url ?? null,
+        portraitAlt: c.media?.alt_text ?? c.name ?? null,
+        stats: s ? {
+          strength: s.strength,
+          speed: s.speed,
+          intelligence: s.intelligence,
+          wisdom: s.wisdom,
+          willpower: s.willpower,
+          magic: s.magic,
+        } : null,
+      };
+    });
+
+    res.json(result);
+  } catch (err: any) {
+    console.error("GET /api/characters crash:", err);
+    res.status(500).json({ error: err.message || "Internal server error" });
   }
-
-  const statsMap: Record<string, any> = {};
-  (statsData || []).forEach((s: any) => {
-    statsMap[s.character_id] = s;
-  });
-
-  const result = (data ?? []).map((c: any) => {
-    const s = statsMap[c.id];
-    return {
-      id: c.id,
-      name: c.name,
-      arabicName: c.arabic_name,
-      alias: c.alias,
-      title: c.title,
-      quote: c.quote,
-      alignment: c.alignment,
-      status: c.status,
-      powerCategory: c.power_category,
-      organization: c.organization,
-      shortBio: c.short_bio,
-      portraitUrl: c.media?.secure_url ?? null,
-      portraitAlt: c.media?.alt_text ?? null,
-      stats: s ? {
-        strength: s.strength,
-        speed: s.speed,
-        intelligence: s.intelligence,
-        wisdom: s.wisdom,
-        willpower: s.willpower,
-        magic: s.magic,
-      } : null,
-    };
-  });
-
-  res.json(result);
 });
 
 /**
