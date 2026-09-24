@@ -68970,15 +68970,12 @@ if (shouldShowDeprecationWarning()) console.warn("\u26A0\uFE0F  Node.js 20 and b
 
 // src/lib/supabase.ts
 var _client = null;
+var DEFAULT_SUPABASE_URL = "https://ufbaokhbfntlkvyzgses.supabase.co";
+var DEFAULT_SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVmYmFva2hiZm50bGt2eXpnc2VzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4NjIzNDIsImV4cCI6MjEwMzQzODM0Mn0.sI87nP35sV9B7iKnzUqykjDq3Ht9xcQb-t_CMWzbpi4";
 function getSupabase() {
   if (_client) return _client;
-  const url2 = process.env["SUPABASE_URL"] || process.env["VITE_SUPABASE_URL"];
-  const key = process.env["SUPABASE_SERVICE_ROLE_KEY"] || process.env["SUPABASE_ANON_KEY"] || process.env["VITE_SUPABASE_ANON_KEY"];
-  if (!url2 || !key) {
-    throw new Error(
-      "SUPABASE_URL (or VITE_SUPABASE_URL) and SUPABASE_SERVICE_ROLE_KEY (or VITE_SUPABASE_ANON_KEY) must be set"
-    );
-  }
+  const url2 = process.env["SUPABASE_URL"] || process.env["VITE_SUPABASE_URL"] || DEFAULT_SUPABASE_URL;
+  const key = process.env["SUPABASE_SERVICE_ROLE_KEY"] || process.env["SUPABASE_ANON_KEY"] || process.env["VITE_SUPABASE_ANON_KEY"] || DEFAULT_SUPABASE_KEY;
   _client = createClient(url2, key, { auth: { persistSession: false } });
   return _client;
 }
@@ -94396,6 +94393,7 @@ app.use((req, _res, next) => {
 app.use(import_express43.default.json({ limit: "25mb" }));
 app.use(import_express43.default.urlencoded({ limit: "25mb", extended: true }));
 app.use("/api", routes_default);
+app.use("/", routes_default);
 app.use((err, _req, res, _next) => {
   console.error("Unhandled API Error:", err);
   if (res.headersSent) {

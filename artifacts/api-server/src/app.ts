@@ -86,8 +86,9 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
 app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ limit: "25mb", extended: true }));
 
-// 6. Router Mounting
+// 6. Router Mounting (Mount on both /api and / for Vercel serverless compatibility)
 app.use("/api", router);
+app.use("/", router);
 
 // 7. Global Fail-Closed Error Handler (Prevents stack traces/SQL leakage to clients)
 app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
