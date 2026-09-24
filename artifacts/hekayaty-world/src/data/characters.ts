@@ -3,6 +3,8 @@ export interface Character {
   name: string;
   arabicName: string;
   alias: string;
+  title: string;
+  quote: string;
   alignment: 'Hero' | 'Villain' | 'Antihero' | 'Neutral';
   powerCategory: string;
   worldId: string;
@@ -10,24 +12,63 @@ export interface Character {
   status: 'Active' | 'Deceased' | 'Unknown' | 'Imprisoned';
   shortBio: string;
   fullBio: string;
+  aboutText: string;
   abilities: string[];
   stats: {
-    strength: number;
-    magic: number;
-    agility: number;
-    intelligence: number;
-    durability: number;
+    strength: number; // القوة
+    speed: number;    // السرعة
+    intelligence: number; // الذكاء
+    wisdom: number;   // الحكمة
+    willpower: number; // الإرادة
+    magic: number;    // السحر
   };
   imageKey: string;
   firstAppearance: string;
+  relationships: {
+    id: string;
+    name: string;
+    relation: string;
+    imageKey: string;
+  }[];
+  artifacts: {
+    id: string;
+    name: string;
+    type: string;
+    imageKey: string;
+  }[];
+  timeline: {
+    year: string;
+    title: string;
+    subtitle: string;
+  }[];
+  appearances: {
+    id: string;
+    title: string;
+    subtitle: string;
+    imageKey: string;
+  }[];
+  gallery: string[];
+  encyclopediaRefs: {
+    id: string;
+    title: string;
+    subtitle: string;
+  }[];
+  worldRefs: {
+    id: string;
+    title: string;
+    subtitle: string;
+    imageKey: string;
+  }[];
 }
 
 export const MOCK_CHARACTERS: Character[] = [
   {
     id: 'c1',
-    name: 'Al-Saqr',
-    arabicName: 'الصقر',
-    alias: 'The Falcon',
+    name: 'Tarek',
+    arabicName: 'طارق',
+    alias: 'Al-Saqr',
+    title: 'وارث النور\nHEIR OF LIGHT',
+    quote: 'النور لا يُمنح... بل يُكتسب',
     alignment: 'Hero',
     powerCategory: 'Enhanced Combat',
     worldId: 'w1',
@@ -35,94 +76,104 @@ export const MOCK_CHARACTERS: Character[] = [
     status: 'Active',
     shortBio: 'A legendary warrior possessing the ancient Armor of the Sun, defending the sky kingdoms from terrestrial threats.',
     fullBio: 'Born in the high peaks of the Aethel Mountains, Al-Saqr was chosen by the ancient spirits to wield the Solar Plate, an armor forged in the heart of a dying star. He represents the ultimate justice and strikes with blinding speed.',
+    aboutText: 'طارق، شاب نشأ في قرية أطير النائية يحمل قلباً نقياً وروحاً لا تعرف الخوف. منذ طفولته وهو يرى نوراً خفياً في ليلة... حاملاً عن عالم مجهول... سر ينتظره.\n\nلم يكن يعلم أن هذا الحلم هو جزء من قدره. ولم يكن يدري أن النور الذي يبحث عنه... يسكنه هو.',
     abilities: ['Flight', 'Solar Energy Projection', 'Master Hand-to-hand Combat', 'Enhanced Durability'],
-    stats: { strength: 75, magic: 40, agility: 95, intelligence: 80, durability: 70 },
-    imageKey: 'char-saqr.jpg',
-    firstAppearance: 'com1'
+    stats: { strength: 95, speed: 88, intelligence: 92, wisdom: 97, willpower: 100, magic: 93 },
+    imageKey: 'background photo.png',
+    firstAppearance: 'com1',
+    relationships: [
+      { id: 'r1', name: 'الشيخ ليث', relation: 'المرشد', imageKey: 'char-sirius.jpg' },
+      { id: 'r2', name: 'زياد', relation: 'صديق مقرب', imageKey: 'char-dhayef.jpg' },
+      { id: 'r3', name: 'نوران', relation: 'حليفة', imageKey: 'char-nahr.jpg' },
+      { id: 'r4', name: 'زهراء', relation: 'الجدة', imageKey: 'char-nar.jpg' }
+    ],
+    artifacts: [
+      { id: 'a1', name: 'سيف النور', type: 'أسطورة', imageKey: 'comic-1.jpg' },
+      { id: 'a2', name: 'خاتم الحكمة', type: 'خاتم', imageKey: 'char-nahr.jpg' },
+      { id: 'a3', name: 'عباءة الظلال', type: 'درع', imageKey: 'char-dhayef.jpg' },
+      { id: 'a4', name: 'قلب الشجاعة', type: 'أثر', imageKey: 'char-nar.jpg' }
+    ],
+    timeline: [
+      { year: '1001', title: 'بداية الحلم', subtitle: 'حلم غريب يراود طارق في أطير.' },
+      { year: '1005', title: 'اكتشاف القدر', subtitle: 'علامات تظهر عن ماضيه وأصله.' },
+      { year: '1008', title: 'أول اختبار', subtitle: 'مواجهة طارق لأول عدو حقيقي.' },
+      { year: '1010', title: 'وارث النور', subtitle: 'قبول طارق مصيره ووراثة النور.' }
+    ],
+    appearances: [
+      { id: 'ap1', title: 'بداية الحلم', subtitle: 'الجزء الأول', imageKey: 'comic-1.jpg' },
+      { id: 'ap2', title: 'اختبار الظلال', subtitle: 'الجزء الثاني', imageKey: 'comic-1.jpg' },
+      { id: 'ap3', title: 'قلب الصحراء', subtitle: 'الجزء الثالث', imageKey: 'comic-1.jpg' },
+      { id: 'ap4', title: 'وارث النور', subtitle: 'الجزء الرابع', imageKey: 'comic-1.jpg' }
+    ],
+    gallery: [
+      'background photo.png',
+      'comic-1.jpg',
+      'hero-bg.jpg'
+    ],
+    encyclopediaRefs: [
+      { id: 'er1', title: 'تاريخ النور', subtitle: 'المجلد الأول - صفحة 45' },
+      { id: 'er2', title: 'الأساطير القديمة', subtitle: 'المجلد الثاني - صفحة 112' },
+      { id: 'er3', title: 'سجل الحراس', subtitle: 'المجلد الثالث - صفحة 78' }
+    ],
+    worldRefs: [
+      { id: 'wr1', title: 'قرية أطير', subtitle: 'الموطن الأصلي', imageKey: 'hero-bg.jpg' },
+      { id: 'wr2', title: 'صحراء الأسرار', subtitle: 'المنطقة المخفية', imageKey: 'world-desert.jpg' },
+      { id: 'wr3', title: 'بوابة النور', subtitle: 'المعلم المقدس', imageKey: 'background photo.png' },
+      { id: 'wr4', title: 'جبل القدر', subtitle: 'المناطق الأسطورية', imageKey: 'world-desert.jpg' }
+    ]
   },
   {
     id: 'c2',
     name: 'Bint al-Nahr',
     arabicName: 'بنت النهر',
     alias: 'Daughter of the River',
+    title: 'سيدة المد',
+    quote: 'الماء لا ينسى أبداً',
     alignment: 'Hero',
     powerCategory: 'Elemental Magic',
     worldId: 'w2',
     organization: 'Council of Tides',
     status: 'Active',
     shortBio: 'A powerful water mage who can commune with the ancient leviathans of the deep.',
-    fullBio: 'Raised in the Sunken Citadel, Bint al-Nahr discovered her ability to shape water at a young age. As the firstborn of the royal lineage in over a century with true elemental affinity, she bears the weight of her entire civilization.',
-    abilities: ['Hydrokinesis', 'Water Breathing', 'Healing', 'Ice Manipulation'],
-    stats: { strength: 40, magic: 90, agility: 75, intelligence: 85, durability: 50 },
+    fullBio: 'Raised in the Sunken Citadel...',
+    aboutText: 'بنت النهر هي الأمل الأخير للمدينة الغارقة.',
+    abilities: ['Hydrokinesis', 'Water Breathing'],
+    stats: { strength: 40, speed: 75, intelligence: 85, wisdom: 90, willpower: 80, magic: 95 },
     imageKey: 'char-nahr.jpg',
-    firstAppearance: 'com2'
+    firstAppearance: 'com2',
+    relationships: [],
+    artifacts: [],
+    timeline: [],
+    appearances: [],
+    gallery: [],
+    encyclopediaRefs: [],
+    worldRefs: []
   },
   {
     id: 'c3',
     name: 'Al-Dhayef',
     arabicName: 'الضيف',
     alias: 'The Shadow / The Guest',
+    title: 'ظل الليل',
+    quote: 'الظلام يرى ما لا تراه',
     alignment: 'Antihero',
     powerCategory: 'Shadow Magic',
     worldId: 'w4',
     organization: 'The Unseen Hand',
     status: 'Active',
     shortBio: 'An assassin wrapped in an obsidian shadow cloak, bound by a strict, lethal code of honor.',
-    fullBio: 'Known only as "The Guest" because he arrives uninvited and leaves no trace. Al-Dhayef was trained in the Iron Vale, learning to manipulate the darkness itself as a weapon and a shield. He fights for a twisted sense of balance.',
-    abilities: ['Shadow Step', 'Invisibility', 'Void Blade manifestation', 'Aura Suppression'],
-    stats: { strength: 60, magic: 75, agility: 100, intelligence: 90, durability: 45 },
+    fullBio: 'Known only as "The Guest"...',
+    aboutText: 'الضيف، شخصية غامضة لا تُعرف ملامحها.',
+    abilities: ['Shadow Step', 'Invisibility'],
+    stats: { strength: 60, speed: 100, intelligence: 90, wisdom: 70, willpower: 85, magic: 75 },
     imageKey: 'char-dhayef.jpg',
-    firstAppearance: 'com1'
-  },
-  {
-    id: 'c4',
-    name: 'Umm al-Nar',
-    arabicName: 'أم النار',
-    alias: 'Mother of Fire',
-    alignment: 'Villain',
-    powerCategory: 'Elemental Magic',
-    worldId: 'w1',
-    organization: 'The Ashen Order',
-    status: 'Active',
-    shortBio: 'A terrifying elementalist seeking to cleanse the world in primordial flame.',
-    fullBio: 'Once a respected elder of the desert tribes, Umm al-Nar discovered a forbidden text that bound her soul to an ancient efreet. She now believes that the only way to save the world from corruption is to burn it entirely and start anew.',
-    abilities: ['Pyrokinesis', 'Magma Control', 'Flight', 'Heat Aura'],
-    stats: { strength: 50, magic: 95, agility: 60, intelligence: 80, durability: 85 },
-    imageKey: 'char-nar.jpg',
-    firstAppearance: 'com3'
-  },
-  {
-    id: 'c5',
-    name: 'Sirius',
-    arabicName: 'سيريوس',
-    alias: 'The Star Knight',
-    alignment: 'Hero',
-    powerCategory: 'Cosmic Power',
-    worldId: 'w5',
-    organization: 'The Astral Guard',
-    status: 'Active',
-    shortBio: 'A cosmic crusader wielding a blade forged from the heart of a dying star.',
-    fullBio: 'Sirius fell from the sky during the Great Eclipse. He remembers nothing of his past, only his duty to protect the universe from the creeping void. His armor shines with the light of a thousand galaxies.',
-    abilities: ['Starlight Blasts', 'Vacuum Survival', 'Super Strength', 'Light-speed Travel'],
-    stats: { strength: 90, magic: 85, agility: 70, intelligence: 60, durability: 95 },
-    imageKey: 'char-sirius.jpg',
-    firstAppearance: 'com3'
-  },
-  {
-    id: 'c6',
-    name: 'Al-Sarab',
-    arabicName: 'السراب',
-    alias: 'The Desert Wraith',
-    alignment: 'Antihero',
-    powerCategory: 'Illusion / Time',
-    worldId: 'w1',
-    organization: 'None',
-    status: 'Unknown',
-    shortBio: 'A mysterious entity wandering the Eternal Desert, capable of trapping foes in endless mirages.',
-    fullBio: 'Some say he is a cursed prince, others say he is the desert itself given form. The Desert Wraith controls the sands and the flow of time within his domain. He helps lost travelers or buries conquerors, depending on his unknowable whims.',
-    abilities: ['Illusion Casting', 'Sand Manipulation', 'Time Dilation', 'Intangibility'],
-    stats: { strength: 30, magic: 100, agility: 80, intelligence: 95, durability: 20 },
-    imageKey: 'char-wraith.jpg',
-    firstAppearance: 'com4'
+    firstAppearance: 'com1',
+    relationships: [],
+    artifacts: [],
+    timeline: [],
+    appearances: [],
+    gallery: [],
+    encyclopediaRefs: [],
+    worldRefs: []
   }
 ];

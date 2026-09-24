@@ -17,8 +17,8 @@ export interface Comic {
 export const MOCK_COMICS: Comic[] = [
   {
     id: 'com1',
-    title: 'Dawn of the Falcon',
-    arabicTitle: 'فجر الصقر',
+    title: 'Baghdad\'s Gate',
+    arabicTitle: 'بوابة بغداد',
     issueNumber: 1,
     series: 'Vanguard Legends',
     writer: 'Tariq Al-Nasser',
@@ -32,8 +32,8 @@ export const MOCK_COMICS: Comic[] = [
   },
   {
     id: 'com2',
-    title: 'Tides of War',
-    arabicTitle: 'مد الحرب',
+    title: 'Guardian of the Sands',
+    arabicTitle: 'حارس الرمال',
     issueNumber: 1,
     series: 'Deep Currents',
     writer: 'Omar Farooq',
@@ -47,8 +47,8 @@ export const MOCK_COMICS: Comic[] = [
   },
   {
     id: 'com3',
-    title: 'The Ashen Sky',
-    arabicTitle: 'السماء الرمادية',
+    title: 'Shadow Realms',
+    arabicTitle: 'ممالك الظلال',
     issueNumber: 4,
     series: 'Cosmic Clash',
     writer: 'Zaid Hassan',
@@ -62,8 +62,8 @@ export const MOCK_COMICS: Comic[] = [
   },
   {
     id: 'com4',
-    title: 'Mirage of Truth',
-    arabicTitle: 'سراب الحقيقة',
+    title: 'Legend of the Dove',
+    arabicTitle: 'أسطورة اليمامة',
     issueNumber: 1,
     series: 'Wandering Sands',
     writer: 'Yousef Karim',

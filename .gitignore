@@ -47,3 +47,17 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Environment variables — NEVER commit real secrets
+.env
+.env.local
+.env.production
+.env.production.local
+.env.development.local
+artifacts/api-server/.env
+artifacts/hekayaty-world/.env
+artifacts/hekayaty-world/.env.local
+
+# Build outputs
+artifacts/api-server/dist/
+artifacts/hekayaty-world/dist/

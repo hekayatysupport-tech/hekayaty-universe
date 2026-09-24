@@ -1,22 +1,26 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
-  version: 0.1.0
-  description: API specification
+  version: 0.2.0
+  description: Hekayaty World Universe API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
-    description: Health operations
+  - name: characters
+  - name: comics
+  - name: worlds
+  - name: timeline
+  - name: encyclopedia
+  - name: news
+  - name: gallery
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +28,337 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  # =========================================================================
+  # Characters
+  # =========================================================================
+  /characters:
+    get:
+      operationId: getCharacters
+      tags: [characters]
+      summary: List characters
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CharacterBase"
+
+  /characters/{id}:
+    get:
+      operationId: getCharactersId
+      tags: [characters]
+      summary: Get character detail
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CharacterDetail"
+        "404":
+          description: Not Found
+
+  # =========================================================================
+  # Comics
+  # =========================================================================
+  /comics:
+    get:
+      operationId: getComics
+      tags: [comics]
+      summary: List comic series
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ComicSeries"
+
+  /comics/{id}:
+    get:
+      operationId: getComicsId
+      tags: [comics]
+      summary: Get comic series detail with issues
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/ComicSeries"
+                  - type: object
+                    properties:
+                      issues:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/ComicIssue"
+        "404":
+          description: Not Found
+
+  /comics/{id}/issues:
+    get:
+      operationId: getComicsIdIssues
+      tags: [comics]
+      summary: Get issues for a series
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ComicIssue"
+
+  /reading-order:
+    get:
+      operationId: getReadingOrder
+      tags: [comics]
+      summary: Get global reading order
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ReadingOrderItem"
+
+  # =========================================================================
+  # Worlds
+  # =========================================================================
+  /worlds:
+    get:
+      operationId: getWorlds
+      tags: [worlds]
+      summary: List worlds
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WorldBase"
+
+  /worlds/{id}:
+    get:
+      operationId: getWorldsId
+      tags: [worlds]
+      summary: Get world detail with regions and locations
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorldDetail"
+        "404":
+          description: Not Found
+
+  # =========================================================================
+  # Timeline
+  # =========================================================================
+  /timeline:
+    get:
+      operationId: getTimeline
+      tags: [timeline]
+      summary: Get timeline eras and events
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TimelineEra"
+
+  /timeline/{id}:
+    get:
+      operationId: getTimelineId
+      tags: [timeline]
+      summary: Get timeline event detail
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TimelineEventDetail"
+        "404":
+          description: Not Found
+
+  # =========================================================================
+  # Encyclopedia
+  # =========================================================================
+  /encyclopedia:
+    get:
+      operationId: getEncyclopedia
+      tags: [encyclopedia]
+      summary: List encyclopedia entries
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EncyclopediaEntryBase"
+
+  /encyclopedia/{id}:
+    get:
+      operationId: getEncyclopediaId
+      tags: [encyclopedia]
+      summary: Get encyclopedia entry detail
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EncyclopediaEntryDetail"
+        "404":
+          description: Not Found
+
+  # =========================================================================
+  # News
+  # =========================================================================
+  /news:
+    get:
+      operationId: getNews
+      tags: [news]
+      summary: List news articles
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NewsArticleBase"
+
+  /news/{id}:
+    get:
+      operationId: getNewsId
+      tags: [news]
+      summary: Get news article detail
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsArticleDetail"
+        "404":
+          description: Not Found
+
+  # =========================================================================
+  # Gallery & Upload
+  # =========================================================================
+  /gallery:
+    get:
+      operationId: getGallery
+      tags: [gallery]
+      summary: List all media
+      parameters:
+        - in: query
+          name: category
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Media"
+
+  /upload:
+    post:
+      operationId: postUpload
+      tags: [gallery]
+      summary: Upload an image
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [image]
+              properties:
+                image:
+                  type: string
+                  description: Base64 string of the image
+                category:
+                  type: string
+                altText:
+                  type: string
+                folder:
+                  type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Media"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +369,340 @@ components:
       required:
         - status
 
+    # ========================== Media ==========================
+    Media:
+      type: object
+      properties:
+        id: { type: string }
+        publicId: { type: string }
+        secureUrl: { type: string }
+        width: { type: number, nullable: true }
+        height: { type: number, nullable: true }
+        format: { type: string, nullable: true }
+        resourceType: { type: string, nullable: true }
+        category: { type: string }
+        altText: { type: string, nullable: true }
+
+    # ========================== Characters ==========================
+    CharacterBase:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        arabicName: { type: string }
+        alias: { type: string, nullable: true }
+        title: { type: string, nullable: true }
+        alignment: { type: string }
+        status: { type: string }
+        powerCategory: { type: string, nullable: true }
+        shortBio: { type: string, nullable: true }
+        portraitUrl: { type: string, nullable: true }
+        portraitAlt: { type: string, nullable: true }
+
+    CharacterStats:
+      type: object
+      properties:
+        strength: { type: number }
+        speed: { type: number }
+        intelligence: { type: number }
+        wisdom: { type: number }
+        willpower: { type: number }
+        magic: { type: number }
+
+    CharacterAbility:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        description: { type: string, nullable: true }
+
+    CharacterRelationship:
+      type: object
+      properties:
+        id: { type: string }
+        relationType: { type: string }
+        description: { type: string, nullable: true }
+        relatedId: { type: string }
+        relatedName: { type: string }
+        relatedArabicName: { type: string }
+        relatedPortraitUrl: { type: string, nullable: true }
+
+    CharacterDetail:
+      allOf:
+        - $ref: "#/components/schemas/CharacterBase"
+        - type: object
+          properties:
+            quote: { type: string, nullable: true }
+            organization: { type: string, nullable: true }
+            fullBio: { type: string, nullable: true }
+            aboutText: { type: string, nullable: true }
+            stats: { $ref: "#/components/schemas/CharacterStats", nullable: true }
+            abilities: { type: array, items: { $ref: "#/components/schemas/CharacterAbility" } }
+            relationships: { type: array, items: { $ref: "#/components/schemas/CharacterRelationship" } }
+            gallery: { type: array, items: { $ref: "#/components/schemas/Media" } }
+            appearances:
+              type: array
+              items:
+                type: object
+                properties:
+                  id: { type: string }
+                  role: { type: string, nullable: true }
+                  issueId: { type: string }
+                  issueTitle: { type: string }
+                  issueArabicTitle: { type: string, nullable: true }
+                  issueNumber: { type: number }
+                  seriesTitle: { type: string }
+                  coverUrl: { type: string, nullable: true }
+            worlds:
+              type: array
+              items:
+                type: object
+                properties:
+                  id: { type: string }
+                  relationship: { type: string, nullable: true }
+                  worldId: { type: string }
+                  worldName: { type: string }
+                  worldArabicName: { type: string }
+                  coverUrl: { type: string, nullable: true }
+            artifacts:
+              type: array
+              items:
+                type: object
+                properties:
+                  id: { type: string }
+                  entryId: { type: string }
+                  title: { type: string }
+                  arabicTitle: { type: string, nullable: true }
+                  category: { type: string }
+                  coverUrl: { type: string, nullable: true }
+            timeline:
+              type: array
+              items:
+                type: object
+                properties:
+                  id: { type: string }
+                  eventId: { type: string }
+                  yearLabel: { type: string }
+                  title: { type: string }
+                  arabicTitle: { type: string, nullable: true }
+                  subtitle: { type: string, nullable: true }
+                  eraName: { type: string, nullable: true }
+                  eraArabicName: { type: string, nullable: true }
+
+    # ========================== Comics ==========================
+    ComicSeries:
+      type: object
+      properties:
+        id: { type: string }
+        title: { type: string }
+        arabicTitle: { type: string, nullable: true }
+        description: { type: string, nullable: true }
+        status: { type: string }
+        coverUrl: { type: string, nullable: true }
+
+    ComicIssue:
+      type: object
+      properties:
+        id: { type: string }
+        issueNumber: { type: number }
+        title: { type: string }
+        arabicTitle: { type: string, nullable: true }
+        description: { type: string, nullable: true }
+        releaseDate: { type: string, nullable: true }
+        readingOrderGlobal: { type: number, nullable: true }
+        isSpecialEdition: { type: string, nullable: true }
+        coverUrl: { type: string, nullable: true }
+
+    ReadingOrderItem:
+      type: object
+      properties:
+        id: { type: string }
+        issueNumber: { type: number }
+        title: { type: string }
+        arabicTitle: { type: string, nullable: true }
+        seriesTitle: { type: string }
+        readingOrderGlobal: { type: number, nullable: true }
+        coverUrl: { type: string, nullable: true }
+
+    # ========================== Worlds ==========================
+    WorldBase:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        arabicName: { type: string }
+        description: { type: string, nullable: true }
+        coverUrl: { type: string, nullable: true }
+
+    WorldDetail:
+      allOf:
+        - $ref: "#/components/schemas/WorldBase"
+        - type: object
+          properties:
+            regions:
+              type: array
+              items:
+                type: object
+                properties:
+                  id: { type: string }
+                  name: { type: string }
+                  arabicName: { type: string, nullable: true }
+                  locations:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id: { type: string }
+                        name: { type: string }
+                        arabicName: { type: string, nullable: true }
+                        locationType: { type: string, nullable: true }
+            characters:
+              type: array
+              items:
+                type: object
+                properties:
+                  id: { type: string }
+                  relationship: { type: string, nullable: true }
+                  characterId: { type: string }
+                  characterName: { type: string }
+                  characterArabicName: { type: string }
+                  portraitUrl: { type: string, nullable: true }
+            gallery:
+              type: array
+              items:
+                type: object
+                properties:
+                  id: { type: string }
+                  secureUrl: { type: string }
+                  altText: { type: string, nullable: true }
+
+    # ========================== Timeline ==========================
+    TimelineEventBase:
+      type: object
+      properties:
+        id: { type: string }
+        yearLabel: { type: string }
+        title: { type: string }
+        arabicTitle: { type: string, nullable: true }
+        subtitle: { type: string, nullable: true }
+        description: { type: string, nullable: true }
+
+    TimelineEra:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        arabicName: { type: string, nullable: true }
+        description: { type: string, nullable: true }
+        events:
+          type: array
+          items:
+            $ref: "#/components/schemas/TimelineEventBase"
+
+    TimelineEventDetail:
+      allOf:
+        - $ref: "#/components/schemas/TimelineEventBase"
+        - type: object
+          properties:
+            characters:
+              type: array
+              items:
+                type: object
+                properties:
+                  characterId: { type: string }
+                  name: { type: string }
+                  arabicName: { type: string }
+                  portraitUrl: { type: string, nullable: true }
+            worlds:
+              type: array
+              items:
+                type: object
+                properties:
+                  worldId: { type: string }
+                  name: { type: string }
+                  arabicName: { type: string }
+            comics:
+              type: array
+              items:
+                type: object
+                properties:
+                  issueId: { type: string }
+                  title: { type: string }
+                  issueNumber: { type: number }
+
+    # ========================== Encyclopedia ==========================
+    EncyclopediaEntryBase:
+      type: object
+      properties:
+        id: { type: string }
+        title: { type: string }
+        arabicTitle: { type: string, nullable: true }
+        category: { type: string }
+        coverUrl: { type: string, nullable: true }
+
+    EncyclopediaEntryDetail:
+      allOf:
+        - $ref: "#/components/schemas/EncyclopediaEntryBase"
+        - type: object
+          properties:
+            content: { type: string, nullable: true }
+            tags:
+              type: array
+              items:
+                type: string
+            relatedCharacters:
+              type: array
+              items:
+                type: object
+                properties:
+                  characterId: { type: string }
+                  name: { type: string }
+                  arabicName: { type: string }
+                  portraitUrl: { type: string, nullable: true }
+            relatedWorlds:
+              type: array
+              items:
+                type: object
+                properties:
+                  worldId: { type: string }
+                  name: { type: string }
+                  arabicName: { type: string }
+
+    # ========================== News ==========================
+    NewsArticleBase:
+      type: object
+      properties:
+        id: { type: string }
+        title: { type: string }
+        arabicTitle: { type: string, nullable: true }
+        slug: { type: string }
+        category: { type: string }
+        excerpt: { type: string, nullable: true }
+        publishedAt: { type: string }
+        coverUrl: { type: string, nullable: true }
+
+    NewsArticleDetail:
+      allOf:
+        - $ref: "#/components/schemas/NewsArticleBase"
+        - type: object
+          properties:
+            content: { type: string, nullable: true }
+            tags:
+              type: array
+              items:
+                type: string
+            relatedCharacters:
+              type: array
+              items:
+                type: object
+                properties:
+                  characterId: { type: string }
+                  name: { type: string }
+                  arabicName: { type: string }
+            relatedComics:
+              type: array
+              items:
+                type: object
+                properties:
+                  issueId: { type: string }
+                  title: { type: string }

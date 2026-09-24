@@ -1,10 +1,15 @@
 import React from 'react';
-import { MOCK_WORLDS } from '@/data/worlds';
-import { getImageUrl } from '@/assets';
+import { useGetWorlds } from '@workspace/api-client-react';
 import { Link } from 'wouter';
 import { motion } from 'framer-motion';
 
 export function Worlds() {
+  const { data: worldsData, isLoading, error } = useGetWorlds();
+  const worlds = Array.isArray(worldsData) ? worldsData : [];
+
+  if (isLoading) return <div className="p-20 text-center text-xl text-primary h-screen bg-background">جاري التحميل...</div>;
+  if (error) return <div className="p-20 text-center text-xl text-foreground h-screen bg-background">حدث خطأ أثناء جلب العوالم.</div>;
+
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
       <div className="mb-16">
@@ -16,7 +21,7 @@ export function Worlds() {
       </div>
 
       <div className="space-y-12">
-        {MOCK_WORLDS.map((world, i) => (
+        {worlds.map((world, i) => (
           <motion.div
             key={world.id}
             initial={{ opacity: 0, y: 50 }}
@@ -27,8 +32,8 @@ export function Worlds() {
             <Link href={`/worlds/${world.id}`}>
               <div className="group relative w-full h-[400px] md:h-[500px] overflow-hidden border border-border hover:border-primary cursor-pointer transition-colors block">
                 <img 
-                  src={getImageUrl(world.bannerImageKey)} 
-                  alt={world.name}
+                  src={world.coverUrl || ''} 
+                  alt={world.arabicName || world.name}
                   className="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-1000"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent"></div>
@@ -37,16 +42,13 @@ export function Worlds() {
                 <div className="absolute bottom-0 left-0 p-8 md:p-12 max-w-3xl">
                   <div className="flex items-center gap-4 mb-4">
                     <span className="px-3 py-1 bg-primary/20 backdrop-blur-md text-primary font-bold text-xs uppercase tracking-widest border border-primary/30">
-                      {world.type}
-                    </span>
-                    <span className="text-xs uppercase font-bold text-white/60 tracking-widest">
-                      Pop: {world.stats.population}
+                      World
                     </span>
                   </div>
                   <h2 className="text-4xl md:text-6xl font-serif font-bold text-white group-hover:text-primary transition-colors mb-2 text-glow">
-                    {world.name}
+                    {world.arabicName || world.name}
                   </h2>
-                  <p className="text-xl md:text-2xl font-serif text-white/80 mb-6">{world.arabicName}</p>
+                  <p className="text-xl md:text-2xl font-serif text-white/80 mb-6">{world.name}</p>
                   <p className="text-lg text-white/90 font-light line-clamp-2 md:line-clamp-none">
                     {world.description}
                   </p>

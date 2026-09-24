@@ -1,5 +1,6 @@
 // @ts-nocheck
 import heroBg from "@assets/hekayaty/hero-bg.jpg";
+import bgPhoto from "@assets/hekayaty/background photo.png";
 import charSaqr from "@assets/hekayaty/char-saqr.jpg";
 import charNahr from "@assets/hekayaty/char-nahr.jpg";
 import charDhayef from "@assets/hekayaty/char-dhayef.jpg";
@@ -14,7 +15,15 @@ import worldCitadel from "@assets/hekayaty/world-citadel.jpg";
 import worldSky from "@assets/hekayaty/world-sky.jpg";
 import worldIron from "@assets/hekayaty/world-iron.jpg";
 
+import originalsBg from "@assets/hekayaty/ChatGPT Image 23 سبتمبر 2026، 04_56_21 م.png";
+import novelsBg from "@assets/hekayaty/ChatGPT Image 23 سبتمبر 2026، 05_28_42 م.png";
+import comicsBg from "@assets/hekayaty/ChatGPT Image 23 سبتمبر 2026، 05_31_48 م.png";
+
 export const IMAGES: Record<string, string> = {
+  'originals-bg.png': originalsBg,
+  'novels-bg.png': novelsBg,
+  'comics-bg.png': comicsBg,
+  'background photo.png': bgPhoto,
   'hero-bg.jpg': heroBg,
   'char-saqr.jpg': charSaqr,
   'char-nahr.jpg': charNahr,
