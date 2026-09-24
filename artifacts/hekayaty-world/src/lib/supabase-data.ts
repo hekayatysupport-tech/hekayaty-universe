@@ -16,6 +16,7 @@ function mediaUrl(media: any, fallback: string | null = null): string | null {
 // ─── COMICS ────────────────────────────────────────────────────────────────────
 
 export async function fetchComics(preview = false): Promise<any[]> {
+  console.log("[Supabase Data] Fetching comics...");
   let query = supabase
     .from("comic_series")
     .select(`id, title, arabic_title, description, status, publishing_status, media:cover_media_id ( secure_url, alt_text )`)
@@ -28,12 +29,14 @@ export async function fetchComics(preview = false): Promise<any[]> {
   let { data, error } = await query;
 
   if (error) {
+    console.warn("[Supabase Data] comic_series query warning:", error.message);
     const fallback = await supabase.from("comic_series").select("*").order("title");
     data = fallback.data;
     error = fallback.error;
+    if (error) console.error("[Supabase Data Error] Failed to fetch comic_series fallback:", error);
   }
 
-  return (data ?? []).map((s: any) => ({
+  const result = (data ?? []).map((s: any) => ({
     id: s.id,
     title: s.title,
     arabicTitle: s.arabic_title,
@@ -43,6 +46,9 @@ export async function fetchComics(preview = false): Promise<any[]> {
     coverUrl: mediaUrl(s.media, s.cover_url ?? null),
     coverAlt: s.media?.alt_text ?? s.title ?? null,
   }));
+
+  console.log(`[Supabase Data] Loaded ${result.length} comics`);
+  return result;
 }
 
 export async function fetchComicById(id: string, preview = false): Promise<any | null> {
@@ -125,24 +131,30 @@ export async function fetchComicPages(issueId: string): Promise<any> {
 // ─── CHARACTERS ────────────────────────────────────────────────────────────────
 
 export async function fetchCharacters(): Promise<any[]> {
+  console.log("[Supabase Data] Fetching characters...");
   let { data, error } = await supabase
     .from("characters")
     .select(`id, name, arabic_name, alias, title, quote, alignment, status, power_category, organization, short_bio, media:portrait_media_id ( secure_url, alt_text )`)
     .order("name");
 
   if (error) {
+    console.warn("[Supabase Data] characters query warning:", error.message);
     const fallback = await supabase.from("characters").select("*").order("name");
     data = fallback.data;
     error = fallback.error;
+    if (error) console.error("[Supabase Data Error] Failed to fetch characters fallback:", error);
   }
 
-  if (error || !data) return [];
+  if (error || !data) {
+    console.log("[Supabase Data] Loaded 0 characters");
+    return [];
+  }
 
   const { data: statsData } = await supabase.from("character_stats").select("*");
   const statsMap: Record<string, any> = {};
   (statsData || []).forEach((s: any) => { statsMap[s.character_id] = s; });
 
-  return (data ?? []).map((c: any) => {
+  const result = (data ?? []).map((c: any) => {
     const s = statsMap[c.id];
     return {
       id: c.id,
@@ -161,6 +173,9 @@ export async function fetchCharacters(): Promise<any[]> {
       stats: s ? { strength: s.strength, speed: s.speed, intelligence: s.intelligence, wisdom: s.wisdom, willpower: s.willpower, magic: s.magic } : null,
     };
   });
+
+  console.log(`[Supabase Data] Loaded ${result.length} characters`);
+  return result;
 }
 
 export async function fetchCharacterById(id: string): Promise<any | null> {
@@ -208,18 +223,21 @@ export async function fetchCharacterById(id: string): Promise<any | null> {
 // ─── WORLDS ────────────────────────────────────────────────────────────────────
 
 export async function fetchWorlds(): Promise<any[]> {
+  console.log("[Supabase Data] Fetching worlds...");
   let { data, error } = await supabase
     .from("worlds")
     .select(`id, name, arabic_name, description, media:cover_media_id ( secure_url, alt_text )`)
     .order("name");
 
   if (error) {
+    console.warn("[Supabase Data] worlds query warning:", error.message);
     const fallback = await supabase.from("worlds").select("*").order("name");
     data = fallback.data;
     error = fallback.error;
+    if (error) console.error("[Supabase Data Error] Failed to fetch worlds fallback:", error);
   }
 
-  return (data ?? []).map((w: any) => ({
+  const result = (data ?? []).map((w: any) => ({
     id: w.id,
     worldName: w.name,
     worldArabicName: w.arabic_name,
@@ -227,6 +245,9 @@ export async function fetchWorlds(): Promise<any[]> {
     coverUrl: mediaUrl(w.media, w.cover_url ?? null),
     coverAlt: w.media?.alt_text ?? w.name ?? null,
   }));
+
+  console.log(`[Supabase Data] Loaded ${result.length} worlds`);
+  return result;
 }
 
 export async function fetchWorldById(id: string): Promise<any | null> {
@@ -260,13 +281,17 @@ export async function fetchWorldById(id: string): Promise<any | null> {
 // ─── NOVELS ────────────────────────────────────────────────────────────────────
 
 export async function fetchNovels(preview = false): Promise<any[]> {
+  console.log("[Supabase Data] Fetching novels...");
   let query = supabase.from("novels").select("*");
   if (!preview) query = query.eq("status", "published");
 
   const { data: dbNovels, error } = await query;
-  if (error) return [];
+  if (error) {
+    console.warn("[Supabase Data] novels query error:", error.message);
+    return [];
+  }
 
-  return (dbNovels || []).map((n: any) => ({
+  const result = (dbNovels || []).map((n: any) => ({
     id: n.id,
     slug: n.slug,
     title: n.title,
@@ -285,6 +310,9 @@ export async function fetchNovels(preview = false): Promise<any[]> {
     arabicTagline: n.arabic_tagline,
     createdAt: n.created_at,
   }));
+
+  console.log(`[Supabase Data] Loaded ${result.length} novels`);
+  return result;
 }
 
 // ─── ORIGINALS ────────────────────────────────────────────────────────────────

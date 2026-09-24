@@ -67,33 +67,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const fetchRoles = async (userId: string) => {
     try {
-      const currentSession = (await supabase.auth.getSession()).data.session;
-      if (currentSession?.access_token) {
-        try {
-          const res = await fetch("/api/me", {
-            headers: { Authorization: `Bearer ${currentSession.access_token}` },
-          });
-          if (res.ok) {
-            const me = await res.json();
-            console.log("[AuthContext] loaded /api/me profile:", me);
-            if (me.roles && Array.isArray(me.roles) && me.roles.length > 0) {
-              setRoles(me.roles);
-              setIsSubscriber(Boolean(me.isSubscriber));
-              setSubscriptionDetails(me.subscription || null);
-              return;
-            }
-          }
-        } catch (apiErr) {
-          console.warn("[AuthContext] /api/me fetch error:", apiErr);
-        }
-      }
+      console.log("[AuthContext] Fetching user profile & roles directly from Supabase for user:", userId);
 
-      // Fallback query to Supabase client
       const [profileRes, rolesRes, subRes] = await Promise.all([
         supabase.from("user_profiles").select("role").eq("id", userId).maybeSingle(),
         supabase.from("user_roles").select("role").eq("user_id", userId),
         supabase.from("subscriptions").select("*").eq("user_id", userId).eq("status", "active").gte("expires_at", new Date().toISOString()).maybeSingle(),
       ]);
+
+      if (profileRes.error) console.warn("[AuthContext] user_profiles query warning:", profileRes.error.message);
+      if (rolesRes.error) console.warn("[AuthContext] user_roles query warning:", rolesRes.error.message);
+      if (subRes.error) console.warn("[AuthContext] subscriptions query warning:", subRes.error.message);
 
       const roleList: string[] = [];
       if (profileRes.data?.role) {
@@ -113,7 +97,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         ["super_admin", "administrator", "editor", "publisher", "admin", "writer"].includes(r)
       );
 
-      console.log("[AuthContext] roles loaded via client:", roleList);
+      console.log("[AuthContext] Roles loaded via Supabase:", roleList, "| Subscriber:", Boolean(subRes.data) || isStaffRole);
       setRoles(roleList);
       setIsSubscriber(Boolean(subRes.data) || isStaffRole);
       setSubscriptionDetails(subRes.data || null);
