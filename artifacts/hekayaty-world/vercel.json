@@ -1,5 +1,5 @@
 {
-  "buildCommand": "cd ../.. && pnpm install --frozen-lockfile && cd artifacts/hekayaty-world && pnpm run build",
+  "buildCommand": "cd ../.. && pnpm install --no-frozen-lockfile && cd artifacts/hekayaty-world && pnpm run build",
   "outputDirectory": "dist/public",
   "installCommand": "echo 'using root install'",
   "framework": null,
