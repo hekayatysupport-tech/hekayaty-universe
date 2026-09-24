@@ -31,19 +31,40 @@ const PRESET_POSITIONS = [
   { x: 35, y: 22 },
 ];
 
+const FALLBACK_NODES: GraphNode[] = [
+  { id: 'c1', type: 'character', name: 'Al-Saqr', arabicName: 'الصقر', category: 'Hero', image: '/assets/char-saqr.jpg', x: 50, y: 38 },
+  { id: 'c2', type: 'character', name: 'Bint al-Nahr', arabicName: 'بنت النهر', category: 'Hero', image: '/assets/char-nahr.jpg', x: 25, y: 62 },
+  { id: 'w1', type: 'world', name: 'Sky Kingdom of Iram', arabicName: 'مملكة إرم السماوية', category: 'World Realm', image: '/assets/world-sky.jpg', x: 75, y: 32 },
+  { id: 'w2', type: 'world', name: 'Sunken Citadel', arabicName: 'القلعة الغارقة', category: 'World Realm', image: '/assets/world-citadel.jpg', x: 50, y: 78 },
+  { id: 'c3', type: 'character', name: 'Umm al-Nar', arabicName: 'أم النار', category: 'Guardian', image: '/assets/char-nar.jpg', x: 82, y: 72 },
+  { id: 'c4', type: 'character', name: 'Sirius', arabicName: 'سيريوس', category: 'Celestial', image: '/assets/char-sirius.jpg', x: 18, y: 32 },
+  { id: 'w3', type: 'world', name: 'The Eternal Desert', arabicName: 'الصحراء الخالدة', category: 'World Realm', image: '/assets/world-desert.jpg', x: 68, y: 58 },
+  { id: 'c5', type: 'character', name: 'The Desert Wraith', arabicName: 'طيف الصحراء', category: 'Mystic', image: '/assets/char-wraith.jpg', x: 35, y: 22 },
+];
+
+const FALLBACK_LINKS: GraphLink[] = [
+  { source: 'c1', target: 'w1' },
+  { source: 'c2', target: 'w2' },
+  { source: 'c3', target: 'w3' },
+  { source: 'c4', target: 'w1' },
+  { source: 'c5', target: 'w3' },
+  { source: 'c1', target: 'c2' },
+];
+
 export function UniverseGraph() {
-  const [nodes, setNodes] = useState<GraphNode[]>([]);
-  const [links, setLinks] = useState<GraphLink[]>([]);
-  const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
+  const [nodes, setNodes] = useState<GraphNode[]>(FALLBACK_NODES);
+  const [links, setLinks] = useState<GraphLink[]>(FALLBACK_LINKS);
+  const [selectedNode, setSelectedNode] = useState<GraphNode | null>(FALLBACK_NODES[0]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchGraph() {
       try {
         const res = await fetch('/api/universe/graph');
-        if (res.ok) {
+        const contentType = res.headers.get("content-type");
+        if (res.ok && contentType && contentType.includes("application/json")) {
           const data = await res.json();
-          if (data.nodes && Array.isArray(data.nodes)) {
+          if (data.nodes && Array.isArray(data.nodes) && data.nodes.length > 0) {
             const positioned = data.nodes.slice(0, 8).map((node: any, idx: number) => ({
               ...node,
               x: PRESET_POSITIONS[idx % PRESET_POSITIONS.length].x,
@@ -51,13 +72,11 @@ export function UniverseGraph() {
             }));
             setNodes(positioned);
             setLinks(data.links || []);
-            if (positioned.length > 0) {
-              setSelectedNode(positioned[0]);
-            }
+            setSelectedNode(positioned[0]);
           }
         }
       } catch (err) {
-        console.error('Failed to load universe graph:', err);
+        // Safe fallback
       } finally {
         setLoading(false);
       }

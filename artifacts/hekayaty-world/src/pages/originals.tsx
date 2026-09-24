@@ -16,7 +16,13 @@ export function Originals() {
   useEffect(() => {
     setLoading(true);
     fetch('/api/originals/showcase')
-      .then((res) => res.json())
+      .then((res) => {
+        const ct = res.headers.get("content-type");
+        if (!res.ok || (ct && !ct.includes("application/json"))) {
+          return null;
+        }
+        return res.json();
+      })
       .then((data) => {
         if (data && !data.error) {
           if (Array.isArray(data.originals) && data.originals.length > 0) {
@@ -24,24 +30,11 @@ export function Originals() {
           } else if (Array.isArray(data.allOriginals) && data.allOriginals.length > 0) {
             setOriginals(data.allOriginals);
           }
-        } else {
-          // Fallback to standard endpoint
-          fetch('/api/originals')
-            .then((r) => r.json())
-            .then((list) => {
-              setOriginals(Array.isArray(list) ? list : []);
-            });
         }
         setLoading(false);
       })
       .catch(() => {
-        fetch('/api/originals')
-          .then((r) => r.json())
-          .then((list) => {
-            setOriginals(Array.isArray(list) ? list : []);
-            setLoading(false);
-          })
-          .catch(() => setLoading(false));
+        setLoading(false);
       });
   }, []);
 
