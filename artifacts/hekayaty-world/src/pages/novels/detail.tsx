@@ -20,6 +20,7 @@ import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { DiscoveryEngine } from "@/components/universe/DiscoveryEngine";
 import { RatingReviewWidget } from "@/components/reviews/RatingReviewWidget";
 import { toast } from "sonner";
+import { fetchNovelBySlug } from "@/lib/supabase-data";
 
 export function NovelDetailPage({ params }: { params?: { slug?: string } }) {
   const [, match] = useRoute("/novels/:slug");
@@ -38,22 +39,15 @@ export function NovelDetailPage({ params }: { params?: { slug?: string } }) {
     if (!slug) return;
     setLoading(true);
 
-    const headers: Record<string, string> = {};
-    if (session?.access_token) {
-      headers["Authorization"] = `Bearer ${session.access_token}`;
-    }
-
     const isPreview = new URLSearchParams(window.location.search).get("preview") === "true";
-    const query = isPreview ? "?preview=true" : "";
 
-    fetch(`/api/novels/${slug}${query}`, { headers })
-      .then((res) => res.json())
+    fetchNovelBySlug(slug, isPreview)
       .then((data) => {
-        if (!data.error) setNovel(data);
+        if (data) setNovel(data);
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [slug, session]);
+  }, [slug]);
 
   // Check if this novel is in user library
   useEffect(() => {

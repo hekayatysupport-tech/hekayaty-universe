@@ -4,6 +4,7 @@ import { ArrowLeft, BookOpen, Lock, Layers, Calendar, AlertCircle, ChevronRight,
 import { useAuth } from '@/contexts/AuthContext';
 import { RatingReviewWidget } from '@/components/reviews/RatingReviewWidget';
 import { toast } from 'sonner';
+import { fetchComicById, fetchComicPages } from '@/lib/supabase-data';
 
 export function ComicDetail({ params }: { params: { id: string } }) {
   const { session, isSubscriber } = useAuth();
@@ -26,18 +27,9 @@ export function ComicDetail({ params }: { params: { id: string } }) {
     const previewFlag = searchParams.get('preview') === 'true';
     setIsPreview(previewFlag);
 
-    const headers: Record<string, string> = {};
-    if (session?.access_token) {
-      headers['Authorization'] = `Bearer ${session.access_token}`;
-    }
-
-    const endpoint = `/api/comics/${params.id}${previewFlag ? '?preview=true' : ''}`;
-    fetch(endpoint, { headers })
-      .then((res) => {
-        if (!res.ok) throw new Error('Comic series not found or not published');
-        return res.json();
-      })
+    fetchComicById(params.id, previewFlag)
       .then((data) => {
+        if (!data) throw new Error('Comic series not found or not published');
         setSeries(data);
         setLoading(false);
       })
@@ -45,7 +37,7 @@ export function ComicDetail({ params }: { params: { id: string } }) {
         setError(err.message);
         setLoading(false);
       });
-  }, [params.id, session]);
+  }, [params.id]);
 
   // Check if this comic series is in user library
   useEffect(() => {
@@ -109,24 +101,14 @@ export function ComicDetail({ params }: { params: { id: string } }) {
     setLockedData(null);
     setActivePageIndex(0);
 
-    const headers: Record<string, string> = {};
-    if (session?.access_token) {
-      headers['Authorization'] = `Bearer ${session.access_token}`;
-    }
-
-    const endpoint = `/api/comics/issues/${issueId}/pages${isPreview ? '?preview=true' : ''}`;
-    fetch(endpoint, { headers })
-      .then((res) => {
-        if (res.status === 401 || res.status === 403) {
-          return res.json().then((data) => {
-            setLockedData(data);
-            setPagesLoading(false);
-          });
-        }
-        return res.json().then((data) => {
+    fetchComicPages(issueId)
+      .then((data) => {
+        if (data.error) {
+          setLockedData(data);
+        } else {
           setPages(data.pages || []);
-          setPagesLoading(false);
-        });
+        }
+        setPagesLoading(false);
       })
       .catch(() => setPagesLoading(false));
   };

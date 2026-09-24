@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'wouter';
 import { BookOpen, Crown, Lock, Sparkles, ChevronRight } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { fetchStories } from '@/lib/supabase-data';
 
 export function Stories() {
   const { isSubscriber } = useAuth();
@@ -10,20 +11,10 @@ export function Stories() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/stories')
-      .then((res) => res.json())
+    fetchStories()
       .then(async (storyList) => {
         setStories(Array.isArray(storyList) ? storyList : []);
         setLoading(false);
-
-        // Fetch chapters for each story
-        for (const story of storyList) {
-          fetch(`/api/stories/${story.id}/chapters`)
-            .then((r) => r.json())
-            .then((chaps) => {
-              setChaptersMap((prev) => ({ ...prev, [story.id]: Array.isArray(chaps) ? chaps : [] }));
-            });
-        }
       })
       .catch(() => setLoading(false));
   }, []);

@@ -16,6 +16,7 @@ import {
   UserCheck
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { fetchWriters } from '@/lib/supabase-data';
 
 export function WritersPage() {
   const [writers, setWriters] = useState<any[]>([]);
@@ -25,8 +26,7 @@ export function WritersPage() {
   const [followedState, setFollowedState] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
-    fetch('/api/writers')
-      .then((res) => res.json())
+    fetchWriters()
       .then((data) => setWriters(Array.isArray(data) ? data : []))
       .catch(() => {})
       .finally(() => setLoading(false));

@@ -6,7 +6,7 @@ import {
   Moon, ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, BookOpen, Map, Scroll, Users,
   Zap, Sparkles, Shield, Flame, Brain, Star, Lock, Layers
 } from 'lucide-react';
-import { useGetComics, useGetCharacters, useGetWorlds } from '@workspace/api-client-react';
+import { fetchComics, fetchCharacters, fetchWorlds, fetchNovels } from '@/lib/supabase-data';
 import { calculatePowerRating } from '@/utils/powerRating';
 import { DiscoveryEngine } from '@/components/universe/DiscoveryEngine';
 import { UniverseGraph } from '@/components/universe/UniverseGraph';
@@ -52,10 +52,9 @@ function BrownSectionDivider() {
 
 export function Home() {
   const { isSubscriber } = useAuth();
-  const { data: comicsData } = useGetComics();
-  const { data: charactersData } = useGetCharacters();
-  const { data: worldsData } = useGetWorlds();
-
+  const [comics, setComics] = useState<any[]>([]);
+  const [characters, setCharacters] = useState<any[]>([]);
+  const [worlds, setWorlds] = useState<any[]>([]);
   const [novels, setNovels] = useState<any[]>([]);
   const [novelsLoading, setNovelsLoading] = useState(true);
 
@@ -70,18 +69,14 @@ export function Home() {
   };
 
   useEffect(() => {
-    fetch('/api/novels')
-      .then((res) => res.json())
-      .then((data) => {
-        setNovels(Array.isArray(data) ? data : []);
-        setNovelsLoading(false);
-      })
+    // Load all data directly from Supabase — no backend needed
+    fetchComics().then(setComics).catch(() => setComics([]));
+    fetchCharacters().then(setCharacters).catch(() => setCharacters([]));
+    fetchWorlds().then(setWorlds).catch(() => setWorlds([]));
+    fetchNovels()
+      .then((data) => { setNovels(data); setNovelsLoading(false); })
       .catch(() => setNovelsLoading(false));
   }, []);
-
-  const comics = Array.isArray(comicsData) ? comicsData : [];
-  const characters = Array.isArray(charactersData) ? charactersData : [];
-  const worlds = Array.isArray(worldsData) ? worldsData : [];
 
   return (
     <div className="w-full min-h-[100dvh] flex flex-col justify-between overflow-x-hidden relative">

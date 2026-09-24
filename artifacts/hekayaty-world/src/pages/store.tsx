@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { DiscoveryEngine } from '@/components/universe/DiscoveryEngine';
 import { ShoppingBag, Star, ShieldCheck, Truck } from 'lucide-react';
+import { fetchStoreProducts } from '@/lib/supabase-data';
 
 export function StorePage() {
   const [products, setProducts] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch('/api/store/products')
-      .then((res) => res.json())
+    fetchStoreProducts()
       .then((data) => setProducts(Array.isArray(data) ? data : []))
       .catch(() => {});
   }, []);

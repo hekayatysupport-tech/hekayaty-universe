@@ -26,6 +26,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useReaderPreferences } from "@/hooks/useReaderPreferences";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { getGenreAtmosphere } from "@/config/genreAtmospheres";
+import { fetchNovelChapter } from "@/lib/supabase-data";
 
 // ─── Theme configuration ────────────────────────────────────────────────────
 const THEMES = {
@@ -146,18 +147,14 @@ export function HekayatyReader({ params }: { params?: { novelSlug?: string; chap
       headers["Authorization"] = `Bearer ${session.access_token}`;
     }
 
-    const q = isPreview ? "?preview=true" : "";
-    fetch(`/api/novels/chapters/${chapterId}${q}`, { headers })
-      .then((res) => {
-        if (res.status === 403 || res.status === 401) {
-          return res.json().then((d) => { setLockedData(d); setLoading(false); });
+    fetchNovelChapter(chapterId)
+      .then((d) => {
+        if (d) {
+          setChapter(d);
+        } else {
+          setLockedData({ error: "Chapter not found" });
         }
-        if (!res.ok) {
-          return fetch(`/api/stories/chapters/${chapterId}${q}`, { headers })
-            .then((r) => r.json())
-            .then((d) => { if (d.error) setLockedData(d); else setChapter(d); setLoading(false); });
-        }
-        return res.json().then((d) => { setChapter(d); setLoading(false); });
+        setLoading(false);
       })
       .catch((err) => { console.error(err); setLoading(false); });
   }, [chapterId, isPreview, session, authLoading]);

@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { getImageUrl } from '@/assets';
+import { fetchOriginalsShowcase } from '@/lib/supabase-data';
 
 export function Originals() {
   const { isSubscriber } = useAuth();
@@ -15,16 +16,9 @@ export function Originals() {
 
   useEffect(() => {
     setLoading(true);
-    fetch('/api/originals/showcase')
-      .then((res) => {
-        const ct = res.headers.get("content-type");
-        if (!res.ok || (ct && !ct.includes("application/json"))) {
-          return null;
-        }
-        return res.json();
-      })
+    fetchOriginalsShowcase()
       .then((data) => {
-        if (data && !data.error) {
+        if (data) {
           if (Array.isArray(data.originals) && data.originals.length > 0) {
             setOriginals(data.originals);
           } else if (Array.isArray(data.allOriginals) && data.allOriginals.length > 0) {

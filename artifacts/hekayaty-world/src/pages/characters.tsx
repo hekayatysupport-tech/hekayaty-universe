@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useGetCharacters } from '@workspace/api-client-react';
+import React, { useState, useEffect } from 'react';
+import { fetchCharacters } from '@/lib/supabase-data';
 import { DiscoveryEngine } from '@/components/universe/DiscoveryEngine';
 import { Link } from 'wouter';
 import { motion } from 'framer-motion';
@@ -9,11 +9,17 @@ import { calculatePowerRating } from '@/utils/powerRating';
 export function Characters() {
   const [filter, setFilter] = useState('All');
   const [search, setSearch] = useState('');
-
-  const { data: charactersData, isLoading, error } = useGetCharacters();
-  const characters = Array.isArray(charactersData) ? charactersData : [];
+  const [characters, setCharacters] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<any>(null);
 
   const alignments = ['All', 'Hero', 'Villain', 'Antihero', 'Neutral'];
+
+  useEffect(() => {
+    fetchCharacters()
+      .then((data) => { setCharacters(data); setIsLoading(false); })
+      .catch((err) => { setError(err); setIsLoading(false); });
+  }, []);
 
   const filtered = characters.filter(c => 
     (filter === 'All' || c.alignment === filter) &&

@@ -27,6 +27,7 @@ import {
   Star
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { fetchWriterBySlug } from '@/lib/supabase-data';
 
 interface Comment {
   id: string;
@@ -159,9 +160,8 @@ export function WriterDetailPage({ params }: { params: { slug: string } }) {
   const fetchWriter = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/writers/${slug}`);
-      if (!res.ok) throw new Error('Not found');
-      const data: WriterProfile = await res.json();
+      const data = await fetchWriterBySlug(slug);
+      if (!data) throw new Error('Not found');
       setWriter(data);
       setPosts(data.posts || []);
       setFollowersCount(data.followersCount || 1240);

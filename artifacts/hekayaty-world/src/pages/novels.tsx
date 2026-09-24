@@ -3,6 +3,7 @@ import { Link } from 'wouter';
 import { DiscoveryEngine } from '@/components/universe/DiscoveryEngine';
 import { BookOpen, Star, Sparkles, Lock, ArrowLeft } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { fetchNovels } from '@/lib/supabase-data';
 
 export function NovelsPage() {
   const { isSubscriber } = useAuth();
@@ -10,10 +11,9 @@ export function NovelsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/novels')
-      .then((res) => res.json())
+    fetchNovels()
       .then((data) => {
-        setNovels(Array.isArray(data) ? data : []);
+        setNovels(data);
         setLoading(false);
       })
       .catch(() => setLoading(false));

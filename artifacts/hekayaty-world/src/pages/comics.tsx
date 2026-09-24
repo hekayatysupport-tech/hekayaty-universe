@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'wouter';
 import { Search, LayoutGrid, List, BookOpen, Lock, Sparkles, AlertCircle } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { fetchComics } from '@/lib/supabase-data';
 
 export function Comics() {
   const { session } = useAuth();
@@ -16,20 +17,13 @@ export function Comics() {
     const previewFlag = params.get('preview') === 'true';
     setIsPreview(previewFlag);
 
-    const headers: Record<string, string> = {};
-    if (session?.access_token) {
-      headers['Authorization'] = `Bearer ${session.access_token}`;
-    }
-
-    const endpoint = `/api/comics${previewFlag ? '?preview=true' : ''}`;
-    fetch(endpoint, { headers })
-      .then((res) => res.json())
+    fetchComics(previewFlag)
       .then((data) => {
-        setComics(Array.isArray(data) ? data : []);
+        setComics(data);
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [session]);
+  }, []);
 
   const filtered = comics.filter((c) =>
     (c.title || '').toLowerCase().includes(search.toLowerCase()) ||

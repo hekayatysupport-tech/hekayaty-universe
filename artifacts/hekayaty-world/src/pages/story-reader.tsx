@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { ChapterCommentsWidget } from '@/components/comments/ChapterCommentsWidget';
 import { RatingReviewWidget } from '@/components/reviews/RatingReviewWidget';
 import { DiscoverySection } from '@/components/universe/DiscoverySection';
+import { fetchNovelChapter } from '@/lib/supabase-data';
 
 export function StoryReader({ params }: { params?: { id?: string } }) {
   const [, match] = useRoute('/stories/chapters/:id');
@@ -25,26 +26,13 @@ export function StoryReader({ params }: { params?: { id?: string } }) {
   useEffect(() => {
     if (!chapterId) return;
 
-    const headers: Record<string, string> = {};
-    if (session?.access_token) {
-      headers['Authorization'] = `Bearer ${session.access_token}`;
-    }
-
-    fetch(`/api/stories/chapters/${chapterId}`, { headers })
-      .then((res) => {
-        if (res.status === 401 || res.status === 403) {
-          return res.json().then((data) => {
-            setLockedData(data);
-            setLoading(false);
-          });
-        }
-        return res.json().then((data) => {
-          setChapter(data);
-          setLoading(false);
-        });
+    fetchNovelChapter(chapterId)
+      .then((data) => {
+        if (data) setChapter(data);
+        setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [chapterId, session]);
+  }, [chapterId]);
 
   // Track scroll progress
   useEffect(() => {
