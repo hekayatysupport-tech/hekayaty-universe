@@ -1,8 +1,13 @@
 {
-  "buildCommand": "cd ../.. && pnpm install --no-frozen-lockfile && pnpm --filter @workspace/api-server run build && cd artifacts/hekayaty-world && pnpm run build",
+  "buildCommand": "cd ../.. && pnpm install --no-frozen-lockfile && pnpm --filter @workspace/api-server run build && cp artifacts/api-server/dist/app.mjs artifacts/hekayaty-world/api/app.mjs && cd artifacts/hekayaty-world && pnpm run build",
   "outputDirectory": "dist/public",
   "installCommand": "echo 'using root install'",
   "framework": null,
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "api/app.mjs"
+    }
+  },
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api" },
     { "source": "/(.*)", "destination": "/index.html" }

@@ -44,20 +44,25 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-// 3. Strict CORS Configuration
+// 3. CORS Configuration
+// In production on Vercel, the frontend and backend share the same domain so
+// requests are same-origin. For preview deployments, origins vary, so we allow all.
+const isProduction = process.env.NODE_ENV === "production" || process.env.VERCEL;
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(",")
   : ["http://localhost:3000", "http://localhost:5173", "http://127.0.0.1:3000", "http://127.0.0.1:5173"];
 
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("CORS policy violation: Origin not allowed"));
-      }
-    },
+    origin: isProduction
+      ? true // allow all origins on Vercel (frontend is same-origin anyway)
+      : (origin, callback) => {
+          if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+          } else {
+            callback(new Error("CORS policy violation: Origin not allowed"));
+          }
+        },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
