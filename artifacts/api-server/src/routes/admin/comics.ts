@@ -419,39 +419,67 @@ router.post("/", requireRole(["editor", "publisher", "administrator", "super_adm
 
       if (novelErr) throw novelErr;
 
-      await supabase.from("audit_logs").insert({
-        user_id: user.id,
-        action: "CREATE",
-        resource_type: "novel",
-        resource_id: novel.id,
-        details: { title: novel.title }
-      });
+      try {
+        await supabase.from("audit_logs").insert({
+          user_id: user.id,
+          action: "CREATE",
+          resource_type: "novel",
+          resource_id: novel.id,
+          details: { title: novel.title }
+        });
+      } catch (aErr) {
+        console.warn("Audit log insert ignored:", aErr);
+      }
 
       res.status(201).json({ ...novel, genre: genre || "Fantasy", is_original: Boolean(is_original), category: "novel" });
       return;
     }
 
-    const { data, error } = await supabase
+    // Clean payload for comic_series
+    const insertPayload: any = {
+      title: body.title,
+      arabic_title: body.arabic_title || null,
+      description: formattedDesc,
+      status: body.status || "Ongoing",
+      publishing_status: body.publishing_status || "draft",
+      cover_media_id: body.cover_media_id || null,
+    };
+    if (user?.id) {
+      insertPayload.created_by = user.id;
+      insertPayload.updated_by = user.id;
+    }
+
+    let { data, error } = await supabase
       .from("comic_series")
-      .insert({
-        ...body,
-        description: formattedDesc,
-        publishing_status: body.publishing_status || "draft",
-        created_by: user.id,
-        updated_by: user.id
-      })
+      .insert(insertPayload)
       .select()
       .single();
 
+    if (error) {
+      delete insertPayload.created_by;
+      delete insertPayload.updated_by;
+      const retry = await supabase
+        .from("comic_series")
+        .insert(insertPayload)
+        .select()
+        .single();
+      data = retry.data;
+      error = retry.error;
+    }
+
     if (error) throw error;
 
-    await supabase.from("audit_logs").insert({
-      user_id: user.id,
-      action: "CREATE",
-      resource_type: "comic_series",
-      resource_id: data.id,
-      details: { title: data.title }
-    });
+    try {
+      await supabase.from("audit_logs").insert({
+        user_id: user.id,
+        action: "CREATE",
+        resource_type: "comic_series",
+        resource_id: data.id,
+        details: { title: data.title }
+      });
+    } catch (aErr) {
+      console.warn("Audit log insert ignored:", aErr);
+    }
 
     res.status(201).json({ ...data, genre: genre || "Fantasy", is_original: Boolean(is_original), category: "comic" });
   } catch (error: any) {
@@ -570,26 +598,48 @@ router.patch("/:id", requireRole(["editor", "publisher", "administrator", "super
       }
     }
 
-    const { data, error } = await supabase
+    const updatePayload: any = {
+      description: formattedDesc,
+      updated_at: new Date().toISOString()
+    };
+    if (body.title !== undefined) updatePayload.title = body.title;
+    if (body.arabic_title !== undefined) updatePayload.arabic_title = body.arabic_title;
+    if (body.status !== undefined) updatePayload.status = body.status;
+    if (body.publishing_status !== undefined) updatePayload.publishing_status = body.publishing_status;
+    if (body.cover_media_id !== undefined) updatePayload.cover_media_id = body.cover_media_id;
+    if (user?.id) updatePayload.updated_by = user.id;
+
+    let { data, error } = await supabase
       .from("comic_series")
-      .update({
-        ...body,
-        description: formattedDesc,
-        updated_by: user.id,
-        updated_at: new Date().toISOString()
-      })
+      .update(updatePayload)
       .eq("id", id)
       .select()
       .single();
 
+    if (error) {
+      delete updatePayload.updated_by;
+      const retry = await supabase
+        .from("comic_series")
+        .update(updatePayload)
+        .eq("id", id)
+        .select()
+        .single();
+      data = retry.data;
+      error = retry.error;
+    }
+
     if (error) throw error;
 
-    await supabase.from("audit_logs").insert({
-      user_id: user.id,
-      action: "UPDATE",
-      resource_type: "comic_series",
-      resource_id: id
-    });
+    try {
+      await supabase.from("audit_logs").insert({
+        user_id: user.id,
+        action: "UPDATE",
+        resource_type: "comic_series",
+        resource_id: id
+      });
+    } catch (aErr) {
+      console.warn("Audit log insert ignored:", aErr);
+    }
 
     res.json({ ...data, genre: genre || "Fantasy", category: "comic" });
   } catch (error: any) {

@@ -82,9 +82,9 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
   next();
 });
 
-// 5. Body Parsing with Safe Limits (1mb for standard endpoints)
-app.use(express.json({ limit: "1mb" }));
-app.use(express.urlencoded({ limit: "1mb", extended: true }));
+// 5. Body Parsing with Safe Limits (25mb for image uploads & base64)
+app.use(express.json({ limit: "25mb" }));
+app.use(express.urlencoded({ limit: "25mb", extended: true }));
 
 // 6. Router Mounting
 app.use("/api", router);
