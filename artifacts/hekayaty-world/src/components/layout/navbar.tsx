@@ -14,10 +14,8 @@ export function Navbar() {
 
   const navLinks = [
     { href: '/characters', label: 'Characters' },
-    { href: '/worlds', label: 'Worlds' },
     { href: '/comics', label: 'Comics' },
     { href: '/stories', label: 'Stories' },
-    { href: '/timeline', label: 'Timeline' },
     { href: '/encyclopedia', label: 'Encyclopedia' },
     { href: '/news', label: 'News' },
     { href: '/card-game', label: 'TCG' },

@@ -15,15 +15,11 @@ export function NavbarUniverse() {
   const isWriter = roles.some(r => ['writer', 'super_admin', 'administrator', 'publisher'].includes(r));
 
   const navLinks = [
-    { href: '/universe', label: 'Atlas' },
     { href: '/writers', label: 'Writers' },
     { href: '/novels', label: 'Novels' },
     { href: '/comics', label: 'Comics' },
     { href: '/stories', label: 'Stories' },
     { href: '/characters', label: 'Characters' },
-    { href: '/worlds', label: 'Worlds' },
-    { href: '/timeline', label: 'Timeline' },
-    { href: '/store', label: 'Store' },
     { href: '/community', label: 'Community' },
   ];
 
