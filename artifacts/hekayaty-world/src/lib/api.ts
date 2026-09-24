@@ -7,9 +7,18 @@
  * Usage: import { apiUrl } from '@/lib/api';
  *        fetch(apiUrl('/api/admin/characters'))
  */
-export const API_BASE_URL: string =
-  (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
-  (import.meta.env.PROD ? '' : 'http://localhost:5000');
+function getApiBaseUrl(): string {
+  const envUrl = import.meta.env.VITE_API_BASE_URL as string | undefined;
+  if (import.meta.env.PROD) {
+    if (!envUrl || envUrl.includes('localhost') || envUrl.includes('127.0.0.1')) {
+      return '';
+    }
+    return envUrl;
+  }
+  return envUrl ?? 'http://localhost:5000';
+}
+
+export const API_BASE_URL: string = getApiBaseUrl();
 
 /**
  * Returns a full API URL for the given path.
